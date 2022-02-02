@@ -150,12 +150,11 @@
             <td class="py-3"></td>
         </tr>
         <tr>
-            <td class="border-0 total-border-left total-table-attribute-label">
+            <td class="border-0 total-border-left total-table-attribute-label total-label">
                 @lang('pdf_total')
             </td>
             <td
-                class="py-8 border-0 total-border-right item-cell total-table-attribute-value"
-                style="color: #5851D8"
+                class="py-8 border-0 total-border-right item-cell total-table-attribute-value total-value"
             >
                 {!! format_money_pdf($invoice->total, $invoice->customer->currency)!!}
             </td>

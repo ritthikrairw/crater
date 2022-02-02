@@ -116,7 +116,7 @@ class Invoice extends Model implements HasMedia
 
     public function getInvoicePdfUrlAttribute()
     {
-        return url('/invoices/pdf/'.$this->unique_hash);
+        return url('/invoices/pdf/' . $this->unique_hash);
     }
 
     public function getPaymentModuleEnabledAttribute()
@@ -207,7 +207,7 @@ class Invoice extends Model implements HasMedia
 
     public function scopeWhereInvoiceNumber($query, $invoiceNumber)
     {
-        return $query->where('invoices.invoice_number', 'LIKE', '%'.$invoiceNumber.'%');
+        return $query->where('invoices.invoice_number', 'LIKE', '%' . $invoiceNumber . '%');
     }
 
     public function scopeInvoicesBetween($query, $start, $end)
@@ -222,9 +222,9 @@ class Invoice extends Model implements HasMedia
     {
         foreach (explode(' ', $search) as $term) {
             $query->whereHas('customer', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%'.$term.'%')
-                    ->orWhere('contact_name', 'LIKE', '%'.$term.'%')
-                    ->orWhere('company_name', 'LIKE', '%'.$term.'%');
+                $query->where('name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('contact_name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('company_name', 'LIKE', '%' . $term . '%');
             });
         }
     }
@@ -343,7 +343,7 @@ class Invoice extends Model implements HasMedia
             ExchangeRateLog::addExchangeRateLog($invoice);
         }
 
-        if ($request->has('taxes') && (! empty($request->taxes))) {
+        if ($request->has('taxes') && (!empty($request->taxes))) {
             self::createTaxes($invoice, $request->taxes);
         }
 
@@ -418,7 +418,7 @@ class Invoice extends Model implements HasMedia
 
         self::createItems($this, $request->items);
 
-        if ($request->has('taxes') && (! empty($request->taxes))) {
+        if ($request->has('taxes') && (!empty($request->taxes))) {
             self::createTaxes($this, $request->taxes);
         }
 
@@ -567,15 +567,18 @@ class Invoice extends Model implements HasMedia
         view()->share([
             'invoice' => $this,
             'customFields' => $customFields,
-            'company_address' => $this->getCompanyAddress(),
+            'logo' => $logo ?? null,
+            'company_name' => $company->name,
+            'company_address' => $company->address()->first(),
             'shipping_address' => $this->getCustomerShippingAddress(),
             'billing_address' => $this->getCustomerBillingAddress(),
+            'customer' =>  $this->customer,
+            'customer_billing' => $this->customer->billingAddress()->first(),
             'notes' => $this->getNotes(),
-            'logo' => $logo ?? null,
             'taxes' => $taxes,
         ]);
 
-        return PDF::loadView('app.pdf.invoice.'.$invoiceTemplate);
+        return PDF::loadView('app.pdf.invoice.' . $invoiceTemplate);
     }
 
     public function getEmailAttachmentSetting()
@@ -591,7 +594,7 @@ class Invoice extends Model implements HasMedia
 
     public function getCompanyAddress()
     {
-        if ($this->company && (! $this->company->address()->exists())) {
+        if ($this->company && (!$this->company->address()->exists())) {
             return false;
         }
 
@@ -602,7 +605,7 @@ class Invoice extends Model implements HasMedia
 
     public function getCustomerShippingAddress()
     {
-        if ($this->customer && (! $this->customer->shippingAddress()->exists())) {
+        if ($this->customer && (!$this->customer->shippingAddress()->exists())) {
             return false;
         }
 
@@ -613,7 +616,7 @@ class Invoice extends Model implements HasMedia
 
     public function getCustomerBillingAddress()
     {
-        if ($this->customer && (! $this->customer->billingAddress()->exists())) {
+        if ($this->customer && (!$this->customer->billingAddress()->exists())) {
             return false;
         }
 
@@ -643,7 +646,7 @@ class Invoice extends Model implements HasMedia
             '{INVOICE_DUE_DATE}' => $this->formattedDueDate,
             '{INVOICE_NUMBER}' => $this->invoice_number,
             '{INVOICE_REF_NUMBER}' => $this->reference_number,
-            '{INVOICE_LINK}' => url('/customer/invoices/pdf/'.$this->unique_hash),
+            '{INVOICE_LINK}' => url('/customer/invoices/pdf/' . $this->unique_hash),
         ];
     }
 
@@ -655,7 +658,7 @@ class Invoice extends Model implements HasMedia
         foreach ($templates as $key => $template) {
             $templateName = Str::before(basename($template), '.blade.php');
             $invoiceTemplates[$key]['name'] = $templateName;
-            $invoiceTemplates[$key]['path'] = vite_asset('img/PDF/'.$templateName.'.png');
+            $invoiceTemplates[$key]['path'] = vite_asset('img/PDF/' . $templateName . '.png');
         }
 
         return $invoiceTemplates;
