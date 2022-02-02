@@ -396,11 +396,8 @@ class Payment extends Model implements HasMedia
         view()->share([
             'payment' => $this,
             'logo' => $logo ?? null,
-            'company_name' => $company->name,
-            'company_address' => $company->address()->first(),
+            'company_address' => $this->getCompanyAddress(),
             'billing_address' => $this->getCustomerBillingAddress(),
-            'customer' =>  $this->customer,
-            'customer_billing' => $this->customer->billingAddress()->first(),
             'notes' => $this->getNotes(),
             'invoice' => $invoice,
             'customFields' => $customFields,

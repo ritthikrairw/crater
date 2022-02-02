@@ -236,27 +236,16 @@
                     <td width="50%">
                         <div class="company-info">
                             <p>
-                                <b>{{ $company_name }}</b>
-                                <br>
-                                {!! $company_address['address_street_1'] ? $company_address['address_street_1'] . '<br>' : '' !!}
-                                {!! $company_address['address_street_2'] ? $company_address['address_street_2'] . '<br>' : '' !!}
-                                {{ $company_address['state'] }} {{ $company_address['city'] }}
-                                {{ $company_address['zip'] }}
-                                <br>
-                                {{ $company_address['phone'] }}
+                                {!! $company_address !!}
                             </p>
                         </div>
                     </td>
                     <td width="50%">
                         <div class="customer-info">
                             <p>
-                                <b>{{ $customer->name }}</b>
-                                <br>
-                                {!! $customer_billing['address_street_1'] ? $customer_billing['address_street_1'] . '<br>' : '' !!}
-                                {!! $customer_billing['address_street_2'] ? $customer_billing['address_street_2'] . '<br>' : '' !!}
-                                {{ $customer_billing['state'] }} {{ $customer_billing['city'] }}
-                                {{ $customer_billing['zip'] }} <br>
-                                {{ $customer_billing['phone'] }}
+                                @if ($billing_address)
+                                    {!! $billing_address !!}
+                                @endif
                             </p>
                         </div>
                     </td>
