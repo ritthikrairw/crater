@@ -1,55 +1,85 @@
 @tailwind base;
-
 @tailwind components;
-
 @tailwind utilities;
 
 @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("/fonts/Poppins-Black.ttf") format("truetype");
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Poppins-Black.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 300;
-    font-display: swap;
-    src: url("/fonts/Poppins-Light.ttf") format("truetype");
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/Poppins-Light.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 500;
-    font-display: swap;
-    src: url("/fonts/Poppins-Medium.ttf") format("truetype");
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Poppins-Medium.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 400;
-    font-display: swap;
-    src: url("/fonts/Poppins-Regular.ttf") format("truetype");
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Poppins-Regular.ttf') format('truetype');
 }
 
 @font-face {
-    font-family: "Poppins";
-    font-style: normal;
-    font-weight: 600;
-    font-display: swap;
-    src: url("/fonts/Poppins-Semibold.ttf") format("truetype");
+  font-family: 'Poppins';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Poppins-Semibold.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Sarabun-Regular.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal;
+  font-weight: 300;
+  font-display: swap;
+  src: url('/fonts/Sarabun-Light.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal;
+  font-weight: 500;
+  font-display: swap;
+  src: url('/fonts/Sarabun-Medium.ttf') format('truetype');
+}
+
+@font-face {
+  font-family: 'Sarabun';
+  font-style: normal;
+  font-weight: 600;
+  font-display: swap;
+  src: url('/fonts/Sarabun-SemiBold.ttf') format('truetype');
 }
 
 // Default Theme
 //----------------------------------
 
-@import "themes.scss";
+@import 'themes.scss';
 
 // Base Components
 //----------------------------------
 
-@import "components/animation.scss";
+@import 'components/animation.scss';

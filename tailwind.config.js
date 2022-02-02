@@ -4,13 +4,13 @@ const svgToDataUri = require('mini-svg-data-uri')
 function withOpacityValue(cssVariable) {
   return ({ opacityVariable, opacityValue }) => {
     if (opacityValue !== undefined) {
-      return `rgba(var(${cssVariable}), ${opacityValue})`;
+      return `rgba(var(${cssVariable}), ${opacityValue})`
     }
     if (opacityVariable !== undefined) {
-      return `rgba(var(${cssVariable}), var(${opacityVariable}, 1))`;
+      return `rgba(var(${cssVariable}), var(${opacityVariable}, 1))`
     }
-    return `rgb(var(${cssVariable}))`;
-  };
+    return `rgb(var(${cssVariable}))`
+  }
 }
 
 module.exports = {
@@ -62,7 +62,7 @@ module.exports = {
     },
 
     fontFamily: {
-      base: ['Poppins', 'sans-serif'],
+      base: ['Poppins', 'Sarabun', 'sans-serif'],
     },
   },
   plugins: [
