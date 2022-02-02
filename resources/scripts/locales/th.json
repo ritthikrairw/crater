@@ -1481,7 +1481,7 @@
   "pdf_estimate_label": "ใบเสนอราคา",
   "pdf_estimate_number": "เลขที่",
   "pdf_estimate_date": "วันที่",
-  "pdf_estimate_expire_date": "วันหมดอายุ",
+  "pdf_estimate_expire_date": "ใช้ได้ถึงวันที่",
   "pdf_invoice_label": "ใบวางบิล",
   "pdf_invoice_number": "เลขที่ใบวางบิล",
   "pdf_invoice_date": "วันที่ใบวางบิล",
