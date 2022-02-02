@@ -4,11 +4,12 @@ services:
   app:
     build:
       args:
-        user: crater-user
+        user: www-data
         uid: 1000
       context: ./
       dockerfile: Dockerfile
     image: crater-php
+    container_name: ${APP_NAME:?crater}-php
     restart: unless-stopped
     working_dir: /var/www/
     volumes:
@@ -19,24 +20,42 @@ services:
 
   db:
     image: mariadb
+    container_name: ${APP_NAME:?crater}-mariadb
     restart: always
     volumes:
-      - db:/var/lib/mysql
+      - mariadb_data:/var/lib/mysql
       # If you want to persist data on the host, comment the line above this one...
       # and uncomment the line under this one.
       #- ./docker-compose/db/data:/var/lib/mysql:rw,delegated
     environment:
-      MYSQL_USER: crater
-      MYSQL_PASSWORD: crater
-      MYSQL_DATABASE: crater
-      MYSQL_ROOT_PASSWORD: crater
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:?123456}
+      MYSQL_DATABASE: ${DB_DATABASE:?crater}
+      MYSQL_USER: ${DB_USERNAME:?crater}
+      MYSQL_PASSWORD: ${DB_PASSWORD:?123456}
     ports:
       - '33006:3306'
     networks:
       - crater
 
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: ${APP_NAME:?crater}-phpmyadmin
+    restart: unless-stopped
+    ports:
+      - 8000:80
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOST=db
+    depends_on:
+      - db
+    volumes:
+      - ./docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
+    networks:
+      - crater
+
   nginx:
     image: nginx:1.17-alpine
+    container_name: ${APP_NAME:?crater}-nginx
     restart: unless-stopped
     ports:
       - 80:80
@@ -50,13 +69,15 @@ services:
     build:
       context: ./
       dockerfile: ./docker-compose/cron.dockerfile
+    container_name: ${APP_NAME:?crater}-cron
     volumes:
       - ./:/var/www
     networks:
       - crater
 
 volumes:
-  db:
+  mariadb_data:
+    name: ${APP_NAME:?crater}-mariadb
 
 networks:
   crater:
