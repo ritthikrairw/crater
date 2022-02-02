@@ -250,7 +250,7 @@
                     <td width="50%">
                         <div class="customer-info">
                             <p>
-                                <b>{{ $customer->contact_name }}</b>
+                                <b>{{ $customer->name }}</b>
                                 <br>
                                 {!! $customer_billing['address_street_1'] ? $customer_billing['address_street_1'] . '<br>' : '' !!}
                                 {!! $customer_billing['address_street_2'] ? $customer_billing['address_street_2'] . '<br>' : '' !!}

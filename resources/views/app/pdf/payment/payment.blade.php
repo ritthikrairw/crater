@@ -5,274 +5,215 @@
     <title>@lang('pdf_payment_label') - {{ $payment->payment_number }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <style type="text/css">
-        /* -- Base -- */
-        body {
-            font-family: "DejaVu Sans";
+    <style>
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 30px;
+            border: 1px solid #eee;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
+            font-size: 16px;
+            line-height: 24px;
+            font-family: 'Helvetica Neue', 'Helvetica', Helvetica, Arial, sans-serif;
+            color: #555;
         }
 
-        html {
-            margin: 0px;
-            padding: 0px;
-            margin-top: 50px;
-            margin-bottom: 50px;
-        }
+        /* -- Header -- */
 
-        table {
+        .header table {
             border-collapse: collapse;
-        }
-
-        hr {
-            color: rgba(0, 0, 0, 0.2);
-            border: 0.5px solid #EAF1FB;
-            margin: 50px 0px;
-        }
-
-        /* -- Heeader -- */
-
-        .header-container {
-            /* position: absolute; */
             width: 100%;
-            padding: 0 30px;
-            margin-bottom: 50px;
-            /* height: 150px;
-            left: 0px;
-            top: -60px; */
+            line-height: 1;
         }
 
-        /* .header-section-left {
-            padding-top: 45px;
-            padding-bottom: 45px;
-            padding-left: 30px;
-            display:inline-block;
-            width:30%;
-        } */
-
-        .header-logo {
-            /* position: absolute; */
-            text-transform: capitalize;
-            color: #817AE3;
-            padding-top: 0px;
+        .header table td {
+            padding: 0;
+            vertical-align: top;
         }
 
-        .company-address-container {
-            width: 50%;
-            text-transform: capitalize;
-            padding-left: 80px;
-            margin-bottom: 2px;
-        }
-
-        /* .header-section-right {
-            display: inline-block;
-            position: absolute;
-            right: 0;
-            padding: 15px 30px 15px 0px;
-            float: right;
-        } */
-
-        .header-section-right {
+        .header table tr td:nth-child(2) {
             text-align: right;
         }
 
-        .header {
-            font-size: 20px;
-            color: rgba(0, 0, 0, 0.7);
+        .header-title {
+            line-height: 1;
+            padding: 0;
+            margin: 0 0 16px;
         }
 
-        /* -- Company Address -- */
+        .data-group {
+            line-height: 1;
+        }
 
-        .company-details h1 {
-            margin: 0;
-
+        .data-group .label {
             font-weight: bold;
-            font-size: 15px;
-            line-height: 22px;
-            letter-spacing: 0.05em;
-            text-align: left;
-            max-width: 220px;
+            margin-right: 10px;
         }
 
-        .company-address {
-            margin-top: 0px;
-            font-size: 12px;
-            line-height: 15px;
-            padding-right: 60px;
-            color: #595959;
-            word-wrap: break-word;
+
+
+        /* -- information -- */
+
+        .information table {
+            border-collapse: collapse;
+            width: 100%;
+            line-height: 1;
         }
 
-        .content-wrapper {
-            display: block;
-            height: 200px;
+        .information table td {
+            padding: 0;
+            vertical-align: top;
         }
 
-        .main-content {
-            display: inline-block;
-            padding-top: 20px
-        }
-
-        /* -- Customer Address -- */
-        .customer-address-container {
-            display: block;
-            float: left;
-            width: 40%;
-            padding: 0 0 0 30px;
-        }
-
-        /* -- Shipping -- */
-
-        .shipping-address-label {
-            padding-top: 5px;
-            font-size: 12px;
-            line-height: 18px;
-            margin-bottom: 0px;
-        }
-
-        .shipping-address-name {
-            padding: 0px;
-            font-size: 15px;
-            line-height: 22px;
-            margin: 0px;
-        }
-
-        .shipping-address {
-            font-size: 10px;
-            line-height: 15px;
-            color: #595959;
-            margin: 0px;
-            width: 160px;
-        }
-
-        /* -- Billing -- */
-
-        .billing-address-container {
-            display: block;
-            float: left;
-        }
-
-        .billing-address-container--right {
-            float: right;
-        }
-
-        .billing-address-label {
-            padding-top: 5px;
-            font-size: 12px;
-            line-height: 18px;
-            margin-bottom: 0px;
-            color: #55547A;
-        }
-
-        .billing-address-name {
-            padding: 0px;
-            font-size: 15px;
-            line-height: 22px;
-            margin: 0px;
-        }
-
-        .billing-address {
-            font-size: 10px;
-            line-height: 15px;
-            color: #595959;
-            margin: 0px;
-            width: 180px;
-            word-wrap: break-word;
-        }
-
-        /* -- Payment Details -- */
-
-        .payment-details-container {
-            display: inline;
-            position: absolute;
-            width: 40%;
-            height: 120px;
-            left: 440px;
-            padding: 5px 10px 0 0;
-        }
-
-        .attribute-label {
-            font-size: 12px;
-            line-height: 18px;
-            text-align: left;
-            color: #55547A
-        }
-
-        .attribute-value {
-            font-size: 12px;
-            line-height: 18px;
+        .information table tr td:nth-child(2) {
             text-align: right;
         }
 
-        /* -- Notes -- */
-
-        .notes {
-            font-size: 12px;
-            color: #595959;
-            margin-top: 100px;
-            margin-left: 30px;
-            width: 90%;
-            text-align: left;
-            page-break-before: avoid;
+        .company-info {
+            line-height: 1;
         }
 
-        .notes-label {
-            font-size: 15px;
-            line-height: 22px;
-            letter-spacing: 0.05em;
-            color: #040405;
-            width: 108px;
-            white-space: nowrap;
-            height: 19.87px;
-            padding-bottom: 10px;
+        .customer-info {
+            line-height: 1;
         }
 
-        .content-heading {
-            margin-top: 10px;
+        /* -- Items Table -- */
+        .items-table {
+            border-collapse: collapse;
             width: 100%;
-            text-align: center;
+            line-height: 1;
         }
 
-        p {
-            padding: 0 0 0 0;
-            margin: 0 0 0 0;
+        .items-table td,
+        .items-table th {
+            border: 1px solid #dddddd;
+            text-align: left;
+            padding: 8px;
         }
 
-        .content-heading span {
-            font-weight: normal;
-            font-size: 14px;
-            line-height: 25px;
-            padding-bottom: 5px;
-            border-bottom: 1px solid #B9C1D1;
+        .items-table .item-table-heading-row {
+            background: #eee;
+            border-bottom: 1px solid #ddd;
+            font-weight: bold;
         }
+
+        .item-cell-table-hr {
+            display: none;
+        }
+
+        /* -- Total table -- */
+        .total-display-table {
+            border-collapse: collapse;
+            width: 200px;
+            line-height: 1;
+            text-align: right;
+            float: right;
+            margin-top: 16px;
+        }
+
+        .total-label {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .total-value {
+            font-weight: bold;
+        }
+
 
         /* -- Total Display Box -- */
 
         .total-display-box {
-            min-width: 315px;
             display: block;
-            margin-right: 30px;
-            background: #F9FBFF;
-            border: 1px solid #EAF1FB;
+            background: #eeeeee;
+            border: 1px solid #eeeeee;
             box-sizing: border-box;
-            float: right;
-            padding: 12px 15px 15px 15px;
+            line-height: 1;
+            padding: 10px 20px;
+            border-radius: 8px;
         }
 
         .total-display-label {
             display: inline;
+            font-size: 18px;
             font-weight: bold;
-            font-size: 14px;
-            line-height: 21px;
-            color: #595959;
+            text-align: left;
         }
 
         .total-display-box .amount {
+            display: block;
             float: right;
             font-weight: bold;
-            font-size: 14px;
-            line-height: 21px;
             text-align: right;
-            color: #5851D8;
-            margin-left: 150px;
+        }
+
+        /* -- Notes -- */
+        .notes {
+            display: block;
+            width: 100%;
+            line-height: 1;
+        }
+
+        .notes ul,
+        .notes ol {
+            padding: 6px 0 16px 16px;
+            margin: 0;
+        }
+
+
+        /* -- Helpers -- */
+        .text-primary {
+            color: #5851DB;
+        }
+
+        .text-center {
+            text-align: center
+        }
+
+        table .text-left {
+            text-align: left;
+        }
+
+        table .text-right {
+            text-align: right;
+        }
+
+        .border-0 {
+            border: none;
+        }
+
+        .py-2 {
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .py-8 {
+            padding-top: 8px;
+            padding-bottom: 8px;
+        }
+
+        .py-3 {
+            padding: 3px 0;
+        }
+
+        .pr-20 {
+            padding-right: 20px;
+        }
+
+        .pr-10 {
+            padding-right: 10px;
+        }
+
+        .pl-20 {
+            padding-left: 20px;
+        }
+
+        .pl-10 {
+            padding-left: 10px;
+        }
+
+        .pl-0 {
+            padding-left: 0;
         }
 
     </style>
@@ -283,83 +224,99 @@
 </head>
 
 <body>
-    <div class="header-container">
-        <table width="100%">
-            <tr>
-                @if ($logo)
-                    <td width="50%" class="header-section-left">
-                        <img style="height: 50px;" class="header-logo" src="{{ $logo }}" alt="Company Logo">
-                    @else
-                        @if ($payment->customer)
-                    <td class="header-section-left" style="padding-top:0px;">
-                        <h1 class="header-logo"> {{ $payment->customer->company->name }} </h1>
-                @endif
-                @endif
-                </td>
-                <td width="50%" class="header-section-right company-details company-address">
-                    {!! $company_address !!}
-                </td>
-            </tr>
-        </table>
-    </div>
+    <div class="invoice-box">
+        <div class="header">
+            <table width="100%" cellspacing="0" border="0">
+                <tr>
+                    <td width="50%">
+                        <div class="company-logo">
+                            @if ($logo)
+                                <img style="height: 50px;" src="{{ $logo }}" alt="Company Logo">
+                            @else
+                                <h1> {{ $payment->customer->company->name }} </h1>
+                            @endif
+                        </div>
+                    </td>
 
-    <hr style="border: 0.620315px solid #E8E8E8;">
-
-    <p class="content-heading">
-        <span>@lang('pdf_payment_receipt_label')</span>
-    </p>
-
-    <div class="content-wrapper">
-        <div class="main-content">
-            <div class="customer-address-container">
-                <div class="billing-address-container billing-address">
-                    @if ($billing_address)
-                        @lang('pdf_received_from')
-                        {!! $billing_address !!}
-                    @endif
-                </div>
-                <div class="billing-address-container--right">
-                </div>
-                <div style="clear: both;"></div>
-            </div>
-
-            <div class="payment-details-container">
-                <table width="100%">
-                    <tr>
-                        <td class="attribute-label">@lang('pdf_payment_date')</td>
-                        <td class="attribute-value"> &nbsp;{{ $payment->formattedPaymentDate }}</td>
-                    </tr>
-                    <tr>
-                        <td class="attribute-label">@lang('pdf_payment_number')</td>
-                        <td class="attribute-value"> &nbsp;{{ $payment->payment_number }}</td>
-                    </tr>
-                    <tr>
-                        <td class="attribute-label">@lang('pdf_payment_mode')</td>
-                        <td class="attribute-value">
-                            &nbsp;{{ $payment->paymentMethod ? $payment->paymentMethod->name : '-' }}</td>
-                    </tr>
-                    @if ($payment->invoice && $payment->invoice->invoice_number)
-                        <tr>
-                            <td class="attribute-label">@lang('pdf_invoice_label')</td>
-                            <td class="attribute-value"> &nbsp;{{ $payment->invoice->invoice_number }}</td>
-                        </tr>
-                    @endif
-                </table>
-            </div>
+                    <td width="50%">
+                        <h1 class="header-title">@lang('pdf_payment_receipt_label')</h1>
+                        <div>
+                            <div class="data-group">
+                                <label class="label">@lang('pdf_payment_number'):</label>
+                                <span class="data">{{ $payment->payment_number }}</span>
+                            </div>
+                            <div class="data-group">
+                                <label class="label">@lang('pdf_payment_date'):</label>
+                                <span class="data">{{ $payment->formattedPaymentDate }}</span>
+                            </div>
+                            <div class="data-group">
+                                <label class="label">@lang('pdf_payment_mode'):</label>
+                                <span
+                                    class="data">{{ $payment->paymentMethod ? $payment->paymentMethod->name : '-' }}</span>
+                            </div>
+                            @if ($payment->invoice && $payment->invoice->invoice_number)
+                                <div class="data-group">
+                                    <label class="label">@lang('pdf_invoice_label'):</label>
+                                    <span class="data">{{ $payment->invoice->invoice_number }}</span>
+                                </div>
+                            @endif
+                        </div>
+                    </td>
+                </tr>
+            </table>
         </div>
-        <div style="clear: both;"></div>
-    </div>
-    <div class="total-display-box">
-        <p class="total-display-label">@lang('pdf_payment_amount_received_label')</p>
-        <span class="amount">{!! format_money_pdf($payment->amount, $payment->customer->currency) !!}</span>
-    </div>
-    <div class="notes">
-        @if ($notes)
-            <div class="notes-label">
-                @lang('pdf_notes')
+        <div class="information">
+            <table width="100%" cellspacing="0" border="0">
+                <tr>
+                    <td width="50%">
+                        <div class="company-info">
+                            <p>
+                                <b>{{ $company_name }}</b>
+                                <br>
+                                {!! $company_address['address_street_1'] ? $company_address['address_street_1'] . '<br>' : '' !!}
+                                {!! $company_address['address_street_2'] ? $company_address['address_street_2'] . '<br>' : '' !!}
+                                {{ $company_address['state'] }} {{ $company_address['city'] }}
+                                {{ $company_address['zip'] }}
+                                <br>
+                                {{ $company_address['phone'] }}
+                            </p>
+                        </div>
+                    </td>
+                    <td width="50%">
+                        <div class="customer-info">
+                            <p>
+                                <b>{{ $customer->name }}</b>
+                                <br>
+                                {!! $customer_billing['address_street_1'] ? $customer_billing['address_street_1'] . '<br>' : '' !!}
+                                {!! $customer_billing['address_street_2'] ? $customer_billing['address_street_2'] . '<br>' : '' !!}
+                                {{ $customer_billing['state'] }} {{ $customer_billing['city'] }}
+                                {{ $customer_billing['zip'] }} <br>
+                                {{ $customer_billing['phone'] }}
+                            </p>
+                        </div>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        @if ($payment->invoice && $payment->invoice->invoice_number)
+            <div class="items">
+                @include('app.pdf.payment.partials.table')
             </div>
-            {!! $notes !!}
+        @else
+            <div class="total-display-box">
+                <label class="total-display-label">@lang('pdf_payment_amount_received_label')</label>
+                <span class="amount">{!! format_money_pdf($payment->amount, $payment->customer->currency) !!}</span>
+            </div>
         @endif
+
+        <div class="notes">
+            <p><b>@lang('pdf_notes')</b></p>
+            @if ($notes)
+                {!! $notes !!}
+            @else
+                <p>-</p>
+            @endif
+        </div>
     </div>
 </body>
 
