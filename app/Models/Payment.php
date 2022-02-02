@@ -77,7 +77,7 @@ class Payment extends Model implements HasMedia
 
     public function getPaymentPdfUrlAttribute()
     {
-        return url('/payments/pdf/'.$this->unique_hash);
+        return url('/payments/pdf/' . $this->unique_hash);
     }
 
     public function transaction()
@@ -190,12 +190,12 @@ class Payment extends Model implements HasMedia
     {
         $data = $request->getPaymentPayload();
 
-        if ($request->invoice_id && (! $this->invoice_id || $this->invoice_id !== $request->invoice_id)) {
+        if ($request->invoice_id && (!$this->invoice_id || $this->invoice_id !== $request->invoice_id)) {
             $invoice = Invoice::find($request->invoice_id);
             $invoice->subtractInvoicePayment($request->amount);
         }
 
-        if ($this->invoice_id && (! $request->invoice_id || $this->invoice_id !== $request->invoice_id)) {
+        if ($this->invoice_id && (!$request->invoice_id || $this->invoice_id !== $request->invoice_id)) {
             $invoice = Invoice::find($this->invoice_id);
             $invoice->addInvoicePayment($this->amount);
         }
@@ -267,16 +267,16 @@ class Payment extends Model implements HasMedia
     {
         foreach (explode(' ', $search) as $term) {
             $query->whereHas('customer', function ($query) use ($term) {
-                $query->where('name', 'LIKE', '%'.$term.'%')
-                    ->orWhere('contact_name', 'LIKE', '%'.$term.'%')
-                    ->orWhere('company_name', 'LIKE', '%'.$term.'%');
+                $query->where('name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('contact_name', 'LIKE', '%' . $term . '%')
+                    ->orWhere('company_name', 'LIKE', '%' . $term . '%');
             });
         }
     }
 
     public function scopePaymentNumber($query, $paymentNumber)
     {
-        return $query->where('payments.payment_number', 'LIKE', '%'.$paymentNumber.'%');
+        return $query->where('payments.payment_number', 'LIKE', '%' . $paymentNumber . '%');
     }
 
     public function scopePaymentMethod($query, $paymentMethodId)
@@ -360,19 +360,48 @@ class Payment extends Model implements HasMedia
 
     public function getPDFData()
     {
+
+        $taxes = collect();
+
+        if ($this->tax_per_item === 'YES') {
+            foreach ($this->items as $item) {
+                foreach ($item->taxes as $tax) {
+                    $found = $taxes->filter(function ($item) use ($tax) {
+                        return $item->tax_type_id == $tax->tax_type_id;
+                    })->first();
+
+                    if ($found) {
+                        $found->amount += $tax->amount;
+                    } else {
+                        $taxes->push($tax);
+                    }
+                }
+            }
+        }
+
         $company = Company::find($this->company_id);
         $locale = CompanySetting::getSetting('language', $company->id);
+        $customFields = CustomField::where('model_type', 'Item')->get();
 
         \App::setLocale($locale);
 
         $logo = $company->logo_path;
 
+        $invoice = '';
+
+        if ($this->invoice && $this->invoice->invoice_number) {
+            $invoice = $this->invoice;
+        }
+
         view()->share([
             'payment' => $this,
+            'logo' => $logo ?? null,
             'company_address' => $this->getCompanyAddress(),
             'billing_address' => $this->getCustomerBillingAddress(),
             'notes' => $this->getNotes(),
-            'logo' => $logo ?? null,
+            'invoice' => $invoice,
+            'customFields' => $customFields,
+            'taxes' => $taxes,
         ]);
 
         return PDF::loadView('app.pdf.payment.payment');
@@ -380,7 +409,7 @@ class Payment extends Model implements HasMedia
 
     public function getCompanyAddress()
     {
-        if ($this->company && (! $this->company->address()->exists())) {
+        if ($this->company && (!$this->company->address()->exists())) {
             return false;
         }
 
@@ -391,7 +420,7 @@ class Payment extends Model implements HasMedia
 
     public function getCustomerBillingAddress()
     {
-        if ($this->customer && (! $this->customer->billingAddress()->exists())) {
+        if ($this->customer && (!$this->customer->billingAddress()->exists())) {
             return false;
         }
 
@@ -432,7 +461,7 @@ class Payment extends Model implements HasMedia
             '{PAYMENT_MODE}' => $this->paymentMethod ? $this->paymentMethod->name : null,
             '{PAYMENT_NUMBER}' => $this->payment_number,
             '{PAYMENT_AMOUNT}' => $this->reference_number,
-            '{PAYMENT_LINK}' => url('/customer/payments/pdf/'.$this->unique_hash)
+            '{PAYMENT_LINK}' => url('/customer/payments/pdf/' . $this->unique_hash)
         ];
     }
 

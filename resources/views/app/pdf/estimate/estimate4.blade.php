@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>@lang('pdf_payment_label') - {{ $payment->payment_number }}</title>
+    <title>@lang('pdf_estimate_label') - {{ $estimate->estimate_number }}</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
@@ -120,33 +120,6 @@
             font-weight: bold;
         }
 
-
-        /* -- Total Display Box -- */
-
-        .total-display-box {
-            display: block;
-            background: #eeeeee;
-            border: 1px solid #eeeeee;
-            box-sizing: border-box;
-            line-height: 1;
-            padding: 10px 20px;
-            border-radius: 8px;
-        }
-
-        .total-display-label {
-            display: inline;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: left;
-        }
-
-        .total-display-box .amount {
-            display: block;
-            float: right;
-            font-weight: bold;
-            text-align: right;
-        }
-
         /* -- Notes -- */
         .notes {
             display: block;
@@ -233,33 +206,26 @@
                             @if ($logo)
                                 <img style="height: 50px;" src="{{ $logo }}" alt="Company Logo">
                             @else
-                                <h1> {{ $payment->customer->company->name }} </h1>
+                                <h1> {{ $estimate->customer->company->name }} </h1>
                             @endif
                         </div>
                     </td>
 
                     <td width="50%">
-                        <h1 class="header-title">@lang('pdf_payment_receipt_label')</h1>
+                        <h1 class="header-title">@lang('pdf_estimate_label')</h1>
                         <div>
                             <div class="data-group">
-                                <label class="label">@lang('pdf_payment_number'):</label>
-                                <span class="data">{{ $payment->payment_number }}</span>
+                                <label class="label">@lang('pdf_estimate_number'):</label>
+                                <span class="data">{{ $estimate->estimate_number }}</span>
                             </div>
                             <div class="data-group">
-                                <label class="label">@lang('pdf_payment_date'):</label>
-                                <span class="data">{{ $payment->formattedPaymentDate }}</span>
+                                <label class="label">@lang('pdf_estimate_date'):</label>
+                                <span class="data">{{ $estimate->formattedEstimateDate }}</span>
                             </div>
                             <div class="data-group">
-                                <label class="label">@lang('pdf_payment_mode'):</label>
-                                <span
-                                    class="data">{{ $payment->paymentMethod ? $payment->paymentMethod->name : '-' }}</span>
+                                <label class="label">@lang('pdf_estimate_expire_date'):</label>
+                                <span class="data">{{ $estimate->formattedExpiryDate }}</span>
                             </div>
-                            @if ($payment->invoice && $payment->invoice->invoice_number)
-                                <div class="data-group">
-                                    <label class="label">@lang('pdf_invoice_label'):</label>
-                                    <span class="data">{{ $payment->invoice->invoice_number }}</span>
-                                </div>
-                            @endif
                         </div>
                     </td>
                 </tr>
@@ -287,17 +253,9 @@
                 </tr>
             </table>
         </div>
-        @if ($payment->invoice && $payment->invoice->invoice_number)
-            <div class="items">
-                @include('app.pdf.payment.partials.table')
-            </div>
-        @else
-            <div class="total-display-box">
-                <label class="total-display-label">@lang('pdf_payment_amount_received_label')</label>
-                <span class="amount">{!! format_money_pdf($payment->amount, $payment->customer->currency) !!}</span>
-            </div>
-        @endif
-
+        <div class="items">
+            @include('app.pdf.estimate.partials.table')
+        </div>
         <div class="notes">
             <p><b>@lang('pdf_notes')</b></p>
             @if ($notes)
