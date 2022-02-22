@@ -1,5 +1,0 @@
-<<<<<<< HEAD:public/build/assets/NumberType.dbea2884.js
-import{k as p,r,o as m,l as d,u as c,x as V}from"./vendor.c358b207.js";const i={props:{modelValue:{type:[String,Number],default:null}},emits:["update:modelValue"],setup(t,{emit:u}){const a=t,e=p({get:()=>a.modelValue,set:l=>{u("update:modelValue",l)}});return(l,o)=>{const n=r("BaseInput");return m(),d(n,{modelValue:c(e),"onUpdate:modelValue":o[0]||(o[0]=s=>V(e)?e.value=s:null),type:"number"},null,8,["modelValue"])}}};export{i as default};
-=======
-import{k as p,r,o as m,l as d,u as c,x as V}from"./vendor.d12b5734.js";const i={props:{modelValue:{type:[String,Number],default:null}},emits:["update:modelValue"],setup(t,{emit:u}){const a=t,e=p({get:()=>a.modelValue,set:l=>{u("update:modelValue",l)}});return(l,o)=>{const n=r("BaseInput");return m(),d(n,{modelValue:c(e),"onUpdate:modelValue":o[0]||(o[0]=s=>V(e)?e.value=s:null),type:"number"},null,8,["modelValue"])}}};export{i as default};
->>>>>>> master:public/build/assets/NumberType.7b73360f.js
