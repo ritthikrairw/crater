@@ -16,3 +16,5 @@ Homestead.yaml
 .gitkeep
 
 storage/fonts
+/public/docs
+/.scribe
