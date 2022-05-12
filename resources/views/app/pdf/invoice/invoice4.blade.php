@@ -100,6 +100,11 @@
             display: none;
         }
 
+        .item-description {
+            color: #595959;
+            font-size: 13px;
+        }
+
         /* -- Total table -- */
         .total-display-table {
             border-collapse: collapse;
