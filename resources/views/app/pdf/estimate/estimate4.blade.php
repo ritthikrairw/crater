@@ -6,10 +6,21 @@
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
     <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            padding: 30px;
+            min-height: 100vh;
+        }
+
         .invoice-box {
             max-width: 800px;
             margin: auto;
-            padding: 30px;
+            padding: 30px 30px 80px;
             border: 1px solid #eee;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.15);
             font-size: 16px;
@@ -23,7 +34,7 @@
         .header table {
             border-collapse: collapse;
             width: 100%;
-            line-height: 1;
+            line-height: 0.8;
         }
 
         .header table td {
@@ -36,13 +47,13 @@
         }
 
         .header-title {
-            line-height: 1;
+            line-height: 0.8;
             padding: 0;
             margin: 0 0 16px;
         }
 
         .data-group {
-            line-height: 1;
+            line-height: 0.8;
         }
 
         .data-group .label {
@@ -54,10 +65,11 @@
 
         /* -- information -- */
 
-        .information table {
-            border-collapse: collapse;
-            width: 100%;
-            line-height: 1;
+        .information {
+            border-top: 1px solid #eee;
+            padding-top: 16px;
+            padding-bottom: 20px;
+            margin-top: 16px
         }
 
         .information table td {
@@ -65,23 +77,23 @@
             vertical-align: top;
         }
 
-        .information table tr td:nth-child(2) {
-            text-align: right;
+        .information table tr td:nth-child(3) {
+            text-align: left;
         }
 
         .company-info {
-            line-height: 1;
+            line-height: 0.8;
         }
 
         .customer-info {
-            line-height: 1;
+            line-height: 0.8;
         }
 
         /* -- Items Table -- */
         .items-table {
             border-collapse: collapse;
             width: 100%;
-            line-height: 1;
+            line-height: 0.8;
         }
 
         .items-table td,
@@ -110,7 +122,7 @@
         .total-display-table {
             border-collapse: collapse;
             width: 200px;
-            line-height: 1;
+            line-height: 0.8;
             text-align: right;
             float: right;
             margin-top: 16px;
@@ -129,7 +141,7 @@
         .notes {
             display: block;
             width: 100%;
-            line-height: 1;
+            line-height: 0.8;
         }
 
         .notes ul,
@@ -239,20 +251,17 @@
         <div class="information">
             <table width="100%" cellspacing="0" border="0">
                 <tr>
-                    <td width="50%">
+                    <td width="33.33%">
                         <div class="company-info">
-                            <p>
-                                {!! $company_address !!}
-                            </p>
+                            {!! $company_address !!}
                         </div>
                     </td>
-                    <td width="50%">
+                    <td width="33.33%"></td>
+                    <td width="33.33%">
                         <div class="customer-info">
-                            <p>
-                                @if ($billing_address)
-                                    {!! $billing_address !!}
-                                @endif
-                            </p>
+                            @if ($billing_address)
+                                {!! $billing_address !!}
+                            @endif
                         </div>
                     </td>
                 </tr>
@@ -262,12 +271,20 @@
             @include('app.pdf.estimate.partials.table')
         </div>
         <div class="notes">
-            <p><b>@lang('pdf_notes')</b></p>
-            @if ($notes)
-                {!! $notes !!}
-            @else
-                <p>-</p>
-            @endif
+            <table width="100%" cellspacing="0" border="0">
+                <tr>
+                    <td width="33.33%">
+                        <p style="margin: 16px 0;"><b>@lang('pdf_notes')</b></p>
+                        @if ($notes)
+                            {!! $notes !!}
+                        @else
+                            <p>-</p>
+                        @endif
+                    </td>
+                    <td width="33.33%"></td>
+                    <td width="33.33%"></td>
+                </tr>
+            </table>
         </div>
     </div>
 </body>
