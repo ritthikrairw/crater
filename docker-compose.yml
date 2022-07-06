@@ -74,7 +74,7 @@ services:
       - crater
 
   cron:
-    imgae: ritthikrairw/crater-cron:1.0
+    image: ritthikrairw/crater-cron:1.0
     container_name: ${APP_NAME:?crater}-cron
     volumes:
       - ${APP_ROOT}/:/var/www
@@ -88,3 +88,5 @@ volumes:
 networks:
   crater:
     driver: bridge
+  proxy:
+    external: true
