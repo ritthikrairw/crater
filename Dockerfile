@@ -1,47 +1,114 @@
-FROM php:7.4-fpm
+FROM php:7.4-fpm-alpine
 
-# Arguments defined in docker-compose.yml
-ARG user=crater
-ARG uid=1000
-
-# Install system dependencies
-RUN apt-get update && apt-get install -y \
+# persistent dependencies
+RUN set -eux; \
+    apk add --no-cache \
+    # in theory, docker-entrypoint.sh is POSIX-compliant, but priority is a working, consistent image
+    bash \
+    # Ghostscript is required for rendering PDF previews
+    ghostscript \
+    # Alpine package for "imagemagick" contains ~120 .so files, see: https://github.com/docker-library/wordpress/pull/497
+    imagemagick \
     git \
     curl \
-    libpng-dev \
-    libonig-dev \
-    libxml2-dev \
-    zip \
-    unzip \
-    libzip-dev \
-    libmagickwand-dev \
+    gnupg \
     mariadb-client \
-    gnupg
+    yarn \
+    unzip \
+    ;
 
-# Clear cache
-RUN apt-get clean && rm -rf /var/lib/apt/lists/*
+# install the PHP extensions we need (https://make.wordpress.org/hosting/handbook/handbook/server-environment/#php-extensions)
+RUN set -ex; \
+    \
+    apk add --no-cache --virtual .build-deps \
+    $PHPIZE_DEPS \
+    freetype-dev \
+    icu-dev \
+    imagemagick-dev \
+    libjpeg-turbo-dev \
+    libpng-dev \
+    libwebp-dev \
+    libzip-dev \
+    ; \
+    \
+    docker-php-ext-configure gd \
+    --with-freetype \
+    --with-jpeg \
+    --with-webp \
+    ; \
+    docker-php-ext-install -j "$(nproc)" \
+    bcmath \
+    exif \
+    gd \
+    intl \
+    mysqli \
+    pdo_mysql \
+    zip \
+    ; \
+    # WARNING: imagick is likely not supported on Alpine: https://github.com/Imagick/imagick/issues/328
+    # https://pecl.php.net/package/imagick
+    pecl install imagick-3.6.0; \
+    docker-php-ext-enable imagick; \
+    rm -r /tmp/pear; \
+    \
+    # some misbehaving extensions end up outputting to stdout 🙈 (https://github.com/docker-library/wordpress/issues/669#issuecomment-993945967)
+    out="$(php -r 'exit(0);')"; \
+    [ -z "$out" ]; \
+    err="$(php -r 'exit(0);' 3>&1 1>&2 2>&3)"; \
+    [ -z "$err" ]; \
+    \
+    extDir="$(php -r 'echo ini_get("extension_dir");')"; \
+    [ -d "$extDir" ]; \
+    runDeps="$( \
+    scanelf --needed --nobanner --format '%n#p' --recursive "$extDir" \
+    | tr ',' '\n' \
+    | sort -u \
+    | awk 'system("[ -e /usr/local/lib/" $1 " ]") == 0 { next } { print "so:" $1 }' \
+    )"; \
+    apk add --no-network --virtual .wordpress-phpexts-rundeps $runDeps; \
+    apk del --no-network .build-deps; \
+    \
+    ! { ldd "$extDir"/*.so | grep 'not found'; }; \
+    # check for output like "PHP Warning:  PHP Startup: Unable to load dynamic library 'foo' (tried: ...)
+    err="$(php --version 3>&1 1>&2 2>&3)"; \
+    [ -z "$err" ]
 
-RUN pecl install imagick \
-    && docker-php-ext-enable imagick
+# set recommended PHP.ini settings
+# see https://secure.php.net/manual/en/opcache.installation.php
+RUN set -eux; \
+    docker-php-ext-enable opcache; \
+    { \
+    echo 'opcache.memory_consumption=128'; \
+    echo 'opcache.interned_strings_buffer=8'; \
+    echo 'opcache.max_accelerated_files=4000'; \
+    echo 'opcache.revalidate_freq=2'; \
+    echo 'opcache.fast_shutdown=1'; \
+    } > /usr/local/etc/php/conf.d/opcache-recommended.ini
+# https://wordpress.org/support/article/editing-wp-config-php/#configure-error-logging
+RUN { \
+    # https://www.php.net/manual/en/errorfunc.constants.php
+    # https://github.com/docker-library/wordpress/issues/420#issuecomment-517839670
+    echo 'error_reporting = E_ERROR | E_WARNING | E_PARSE | E_CORE_ERROR | E_CORE_WARNING | E_COMPILE_ERROR | E_COMPILE_WARNING | E_RECOVERABLE_ERROR'; \
+    echo 'display_errors = Off'; \
+    echo 'display_startup_errors = Off'; \
+    echo 'log_errors = On'; \
+    echo 'error_log = /dev/stderr'; \
+    echo 'log_errors_max_len = 1024'; \
+    echo 'ignore_repeated_errors = On'; \
+    echo 'ignore_repeated_source = Off'; \
+    echo 'html_errors = Off'; \
+    } > /usr/local/etc/php/conf.d/error-logging.ini
 
-# Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring zip exif pcntl bcmath gd
-
-# Install Yarn
-RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add - \
-    && echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
-
-RUN apt-get update && apt-get install -y yarn
 
 # Get latest Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
-# Create system user to run Composer and Artisan Commands
-RUN useradd -G www-data,root -u $uid -d /home/$user $user
-RUN mkdir -p /home/$user/.composer && \
-    chown -R $user:$user /home/$user
-
 # Set working directory
-WORKDIR /var/www
+VOLUME /var/www/html
 
-USER $user
+COPY --chown=www-data:www-data . /var/www/html/
+COPY --chown=www-data:www-data .env.prod /var/www/html/.env
+COPY --chmod=+x docker-entrypoint.sh /usr/local/bin/
+
+ENTRYPOINT ["/bin/bash", "/usr/local/bin/docker-entrypoint.sh"]
+CMD ["php-fpm"]

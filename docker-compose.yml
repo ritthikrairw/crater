@@ -2,13 +2,13 @@ version: '3'
 
 services:
   app:
-    image: ritthikrairw/crater:1.0
+    image: ritthikrairw/crater:1.5
     container_name: ${APP_NAME:?crater}-php
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
-      - ${APP_ROOT}/:/var/www
-      - ${APP_ROOT}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
+      - application:/var/www/html
+      - storage:/var/www/html/storage
+      - ${PWD}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
     networks:
       - crater
 
@@ -18,11 +18,14 @@ services:
     environment:
       NGINX_SERVER_NAME: ${NGINX_SERVER_NAME:?localhost}
     restart: unless-stopped
+    ports:
+      - 8088:80
     links:
       - app
     volumes:
-      - ${APP_ROOT}/:/var/www
-      - ${APP_ROOT}/docker-compose/nginx:/etc/nginx/conf.d/
+      - application:/var/www/html
+      - storage:/var/www/html/storage
+      - ${PWD}/docker-compose/nginx:/etc/nginx/conf.d/
     networks:
       - proxy
       - crater
@@ -61,7 +64,7 @@ services:
     depends_on:
       - db
     volumes:
-      - ${APP_ROOT}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
+      - ${PWD}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=proxy"
@@ -82,6 +85,10 @@ services:
       - crater
 
 volumes:
+  application:
+    name: ${APP_NAME:?crater}-application
+  storage:
+    name: ${APP_NAME:?crater}-storage
   mariadb_data:
     name: ${APP_NAME:?crater}-mariadb
 

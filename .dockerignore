@@ -1,10 +1,15 @@
+.github
 .dockerignore
 .gitignore
 *.md
+.env.*
+!.env.prod
 .git/
 .idea/
 .DS_Store/
-docker-compose.*
 LICENSE
 nginx.conf
 yarn.lock
+vendor
+node_modules
+Dockerfile
