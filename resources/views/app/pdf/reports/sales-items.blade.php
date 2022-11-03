@@ -1,17 +1,18 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>@lang('pdf_sales_items_label')</title>
     <style type="text/css">
         body {
             font-family: "DejaVu Sans";
         }
-        
+
         table {
             border-collapse: collapse;
         }
 
-        .sub-container{
+        .sub-container {
             padding: 0px 20px;
         }
 
@@ -132,11 +133,17 @@
             line-height: 21px;
             color: #5851D8;
         }
+
         .text-center {
             text-align: center;
         }
     </style>
+
+    @if (App::isLocale('th'))
+    @include('app.pdf.locale.th')
+    @endif
 </head>
+
 <body>
     <div class="sub-container">
         <table class="report-header">
@@ -154,36 +161,36 @@
                 </td>
             </tr>
         </table>
-        
+
         <p class="sales-items-title">@lang('pdf_items_label')</p>
         @foreach ($items as $item)
-            <div class="items-table-container">
-                <table class="items-table">
-                    <tr>
-                        <td>
-                            <p class="item-title">
-                                {{ $item->name }}
-                            </p>
-                        </td>
-                        <td>
-                            <p class="item-sales-amount">
-                                {!! format_money_pdf($item->total_amount) !!}
-                            </p>
-                        </td>
-                    </tr>
-                </table>
-            </div>
-        @endforeach
-
-            <table class="sales-total-indicator-table">
+        <div class="items-table-container">
+            <table class="items-table">
                 <tr>
-                    <td class="sales-total-cell">
-                        <p class="sales-total-amount">
-                            {!! format_money_pdf($totalAmount) !!}
+                    <td>
+                        <p class="item-title">
+                            {{ $item->name }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="item-sales-amount">
+                            {!! format_money_pdf($item->total_amount, $currency) !!}
                         </p>
                     </td>
                 </tr>
             </table>
+        </div>
+        @endforeach
+
+        <table class="sales-total-indicator-table">
+            <tr>
+                <td class="sales-total-cell">
+                    <p class="sales-total-amount">
+                        {!! format_money_pdf($totalAmount, $currency) !!}
+                    </p>
+                </td>
+            </tr>
+        </table>
     </div>
 
 
@@ -194,10 +201,11 @@
             </td>
             <td>
                 <p class="report-footer-value">
-                    {!! format_money_pdf($totalAmount) !!}
+                    {!! format_money_pdf($totalAmount, $currency) !!}
                 </p>
             </td>
         </tr>
     </table>
 </body>
+
 </html>

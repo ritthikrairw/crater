@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>@lang('pdf_expense_report_label')</title>
     <style type="text/css">
@@ -11,7 +12,7 @@
             border-collapse: collapse;
         }
 
-        .sub-container{
+        .sub-container {
             padding: 0px 20px;
         }
 
@@ -133,7 +134,12 @@
             color: #5851D8;
         }
     </style>
+
+    @if (App::isLocale('th'))
+    @include('app.pdf.locale.th')
+    @endif
 </head>
+
 <body>
     <div class="sub-container">
         <table class="report-header">
@@ -155,18 +161,18 @@
         <div class="expenses-table-container">
             <table class="expenses-table">
                 @foreach ($expenseCategories as $expenseCategory)
-                    <tr>
-                        <td>
-                            <p class="expense-title">
-                                {{ $expenseCategory->category->name }}
-                            </p>
-                        </td>
-                        <td>
-                            <p class="expense-amount">
-                                {!! format_money_pdf($expenseCategory->total_amount) !!}
-                            </p>
-                        </td>
-                    </tr>
+                <tr>
+                    <td>
+                        <p class="expense-title">
+                            {{ $expenseCategory->category->name }}
+                        </p>
+                    </td>
+                    <td>
+                        <p class="expense-amount">
+                            {!! format_money_pdf($expenseCategory->total_amount, $currency) !!}
+                        </p>
+                    </td>
+                </tr>
                 @endforeach
             </table>
         </div>
@@ -175,7 +181,7 @@
     <table class="expense-total-table">
         <tr>
             <td class="expense-total-cell">
-                <p class="expense-total">{!! format_money_pdf($totalExpense) !!}</p>
+                <p class="expense-total">{!! format_money_pdf($totalExpense, $currency) !!}</p>
             </td>
         </tr>
     </table>
@@ -185,9 +191,10 @@
                 <p class="report-footer-label">@lang('pdf_total_expenses_label')</p>
             </td>
             <td>
-                <p class="report-footer-value">{!! format_money_pdf($totalExpense) !!}</p>
+                <p class="report-footer-value">{!! format_money_pdf($totalExpense, $currency) !!}</p>
             </td>
         </tr>
     </table>
 </body>
+
 </html>

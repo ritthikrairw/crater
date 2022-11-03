@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <title>@lang('pdf_sales_customers_label')</title>
     <style type="text/css">
@@ -11,7 +12,7 @@
             border-collapse: collapse;
         }
 
-        .sub-container{
+        .sub-container {
             padding: 0px 20px;
         }
 
@@ -132,11 +133,17 @@
             line-height: 21px;
             color: #5851D8;
         }
+
         .text-center {
             text-align: center;
         }
     </style>
+
+    @if (App::isLocale('th'))
+    @include('app.pdf.locale.th')
+    @endif
 </head>
+
 <body>
     <div class="sub-container">
         <table class="report-header">
@@ -156,34 +163,34 @@
         </table>
 
         @foreach ($customers as $customer)
-            <p class="sales-customer-name">{{ $customer->name }}</p>
-            <div class="sales-table-container">
-                <table class="sales-table">
-                    @foreach ($customer->invoices as $invoice)
-                        <tr>
-                            <td>
-                                <p class="sales-information-text">
-                                    {{ $invoice->formattedInvoiceDate }} ({{ $invoice->invoice_number }})
-                                </p>
-                            </td>
-                            <td>
-                                <p class="sales-amount">
-                                    {!! format_money_pdf($invoice->base_total) !!}
-                                </p>
-                            </td>
-                        </tr>
-                    @endforeach
-                </table>
-            </div>
-            <table class="sales-total-indicator-table">
+        <p class="sales-customer-name">{{ $customer->name }}</p>
+        <div class="sales-table-container">
+            <table class="sales-table">
+                @foreach ($customer->invoices as $invoice)
                 <tr>
-                    <td class="sales-total-cell">
-                        <p class="sales-total-amount">
-                            {!! format_money_pdf($customer->totalAmount) !!}
+                    <td>
+                        <p class="sales-information-text">
+                            {{ $invoice->formattedInvoiceDate }} ({{ $invoice->invoice_number }})
+                        </p>
+                    </td>
+                    <td>
+                        <p class="sales-amount">
+                            {!! format_money_pdf($invoice->base_total, $currency) !!}
                         </p>
                     </td>
                 </tr>
+                @endforeach
             </table>
+        </div>
+        <table class="sales-total-indicator-table">
+            <tr>
+                <td class="sales-total-cell">
+                    <p class="sales-total-amount">
+                        {!! format_money_pdf($customer->totalAmount, $currency) !!}
+                    </p>
+                </td>
+            </tr>
+        </table>
         @endforeach
     </div>
 
@@ -195,10 +202,11 @@
             </td>
             <td>
                 <p class="report-footer-value">
-                    {!! format_money_pdf($totalAmount) !!}
+                    {!! format_money_pdf($totalAmount, $currency) !!}
                 </p>
             </td>
         </tr>
     </table>
 </body>
+
 </html>
