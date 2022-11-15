@@ -27,8 +27,8 @@
         src: url("{{ resource_path('static/fonts/THSarabunNew-BoldItalic.ttf') }}") format('truetype');
     }
 
-    body {
+    body,
+    .invoice-box {
         font-family: "THSarabunNew", sans-serif !important;
     }
-
 </style>

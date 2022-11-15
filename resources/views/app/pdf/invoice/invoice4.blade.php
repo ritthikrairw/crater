@@ -204,11 +204,10 @@
         .pl-0 {
             padding-left: 0;
         }
-
     </style>
 
     @if (App::isLocale('th'))
-        @include('app.pdf.locale.th')
+    @include('app.pdf.locale.th')
     @endif
 </head>
 
@@ -220,9 +219,9 @@
                     <td width="50%">
                         <div class="company-logo">
                             @if ($logo)
-                                <img style="height: 50px;" src="{{ $logo }}" alt="Company Logo">
+                            <img style="height: 50px;" src="{{ $logo }}" alt="Company Logo">
                             @else
-                                <h1> {{ $invoice->customer->company->name }} </h1>
+                            <h1> {{ $invoice->customer->company->name }} </h1>
                             @endif
                         </div>
                     </td>
@@ -262,7 +261,7 @@
                         <div class="customer-info">
                             <p>
                                 @if ($billing_address)
-                                    {!! $billing_address !!}
+                                {!! $billing_address !!}
                                 @endif
                             </p>
                         </div>
@@ -279,9 +278,9 @@
                     <td width="33.33%">
                         <p style="margin: 16px 0;"><b>@lang('pdf_notes')</b></p>
                         @if ($notes)
-                            {!! $notes !!}
+                        {!! $notes !!}
                         @else
-                            <p>-</p>
+                        <p>-</p>
                         @endif
                     </td>
                     <td width="33.33%"></td>

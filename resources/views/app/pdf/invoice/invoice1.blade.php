@@ -325,11 +325,10 @@
         .pl-0 {
             padding-left: 0;
         }
-
     </style>
 
     @if (App::isLocale('th'))
-        @include('app.pdf.locale.th')
+    @include('app.pdf.locale.th')
     @endif
 </head>
 
@@ -339,11 +338,11 @@
             <tr>
                 <td class="text-center">
                     @if ($logo)
-                        <img class="header-logo" style="height:50px" src="{{ $logo }}" alt="Company Logo">
+                    <img class="header-logo" style="height:50px" src="{{ $logo }}" alt="Company Logo">
                     @else
-                        @if ($invoice->customer->company)
-                            <h2 class="header-logo"> {{ $invoice->customer->company->name }}</h2>
-                        @endif
+                    @if ($invoice->customer->company)
+                    <h2 class="header-logo"> {{ $invoice->customer->company->name }}</h2>
+                    @endif
                     @endif
                 </td>
             </tr>
@@ -380,17 +379,17 @@
 
         <div class="billing-address-container billing-address">
             @if ($billing_address)
-                <b>@lang('pdf_bill_to')</b> <br>
+            <b>@lang('pdf_bill_to')</b> <br>
 
-                {!! $billing_address !!}
+            {!! $billing_address !!}
             @endif
         </div>
 
-        <div class="shipping-address-container shipping-address" @if ($billing_address !== '</br>') style="float:left;" @else style="display:block; float:left: padding-left: 0px;" @endif>
+        <div class="shipping-address-container shipping-address" @if ($billing_address !=='</br>' ) style="float:left;" @else style="display:block; float:left: padding-left: 0px;" @endif>
             @if ($shipping_address)
-                <b>@lang('pdf_ship_to')</b> <br>
+            <b>@lang('pdf_ship_to')</b> <br>
 
-                {!! $shipping_address !!}
+            {!! $shipping_address !!}
             @endif
         </div>
 
@@ -400,11 +399,11 @@
 
         <div class="notes">
             @if ($notes)
-                <div class="notes-label">
-                    @lang('pdf_notes')
-                </div>
+            <div class="notes-label">
+                @lang('pdf_notes')
+            </div>
 
-                {!! $notes !!}
+            {!! $notes !!}
             @endif
         </div>
     </div>

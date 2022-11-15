@@ -142,9 +142,9 @@ function format_money_pdf($money, $currency = null)
 
     $currency_with_symbol = '';
     if ($currency->swap_currency_symbol) {
-        $currency_with_symbol = $format_money . '<span style="font-family: DejaVu Sans;">' . $currency->symbol . '</span>';
+        $currency_with_symbol = $format_money . '<span>' . $currency->symbol . '</span>';
     } else {
-        $currency_with_symbol = '<span style="font-family: DejaVu Sans;">' . $currency->symbol . '</span>' . $format_money;
+        $currency_with_symbol = '<span>' . $currency->symbol . '</span>' . $format_money;
     }
 
     return $currency_with_symbol;
