@@ -1,5 +1,8 @@
 FROM php:7.4-fpm
 
+# Set working directory
+WORKDIR /var/www
+
 # Arguments defined in docker-compose.yml
 ARG user=crater
 ARG uid=1000
@@ -41,14 +44,9 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-# Set working directory
-WORKDIR /var/www
-
 USER $user
 
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
-
-RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 COPY . /var/www
 
