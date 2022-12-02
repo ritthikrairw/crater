@@ -45,3 +45,13 @@ RUN mkdir -p /home/$user/.composer && \
 WORKDIR /var/www
 
 USER $user
+
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+COPY . /var/www
+
+ENTRYPOINT ["docker-entrypoint.sh"]
+
+CMD ["php-fpm"]

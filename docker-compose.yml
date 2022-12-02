@@ -1,16 +1,29 @@
 version: '3.8'
-
 services:
+
   app:
-    image: ritthikrairw/crater:1.0
+    image: ritthikrairw/crater:1.2
     container_name: ${APP_NAME:?crater}-php
     restart: unless-stopped
-    working_dir: /var/www/
     volumes:
-      - ${APP_ROOT}/revisions/${APP_REVISION}:/var/www
+      - ${APP_ROOT}:/var/www
       - ${APP_ROOT}/config/.env:/var/www/.env
       - ${APP_ROOT}/shared/storage:/var/www/storage
-      - ${APP_ROOT}/revisions/${APP_REVISION}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
+      - ${APP_ROOT}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
+    networks:
+      - crater
+
+  nginx:
+    image: nginx:1.23.1-alpine
+    container_name: ${APP_NAME:?crater}-nginx
+    restart: always
+    ports:
+      - 8080:80
+    volumes:
+      - ${APP_ROOT}:/var/www
+      - ${APP_ROOT}/config/.env:/var/www/.env
+      - ${APP_ROOT}/shared/storage:/var/www/storage
+      - ${APP_ROOT}/docker-compose/nginx:/etc/nginx/conf.d
     networks:
       - crater
 
@@ -35,45 +48,16 @@ services:
     image: phpmyadmin:latest
     container_name: ${APP_NAME:?crater}-phpmyadmin
     restart: unless-stopped
-
+    ports:
+      - 8082:80
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
     depends_on:
       - db
     volumes:
-      - ${APP_ROOT}/revisions/${APP_REVISION}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.rule=Host(`${PHPMYADMIN_HOST_NAME}`)"
-      # - "traefik.http.routers.${APP_NAME}-phpmyadmin.tls=true"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.tls.certresolver=myresolver"
-      - "traefik.http.routers.${APP_NAME}-phpmyadmin.entrypoints=websecure"
+      - ${APP_ROOT}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
     networks:
-      - proxy
-      - crater
-
-  nginx:
-    image: nginx:1.23.1-alpine
-    container_name: ${APP_NAME:?crater}-nginx
-    restart: unless-stopped
-    volumes:
-      - ${APP_ROOT}/revisions/${APP_REVISION}:/var/www
-      - ${APP_ROOT}/config/.env:/var/www/.env
-      - ${APP_ROOT}/shared/storage:/var/www/storage
-      - ${APP_ROOT}/revisions/${APP_REVISION}/docker-compose/nginx:/etc/nginx/conf.d
-    labels:
-      - "traefik.enable=true"
-      - "traefik.docker.network=proxy"
-      - "traefik.http.routers.${APP_NAME}-nginx.rule=Host(`${NGINX_SERVER_NAME}`)"
-      - "traefik.http.routers.${APP_NAME}-nginx.tls=true"
-      - "traefik.http.routers.${APP_NAME}-nginx.tls.certresolver=myresolver"
-      - "traefik.http.routers.${APP_NAME}-nginx.entrypoints=websecure"
-      - "traefik.http.routers.${APP_NAME}-nginx.service=${APP_NAME}-nginx"
-      - "traefik.http.services.${APP_NAME}-nginx.loadbalancer.server.port=80"
-    networks:
-      - proxy
       - crater
 
   cron:
@@ -81,7 +65,7 @@ services:
     container_name: ${APP_NAME:?crater}-cron
     restart: unless-stopped
     volumes:
-      - ${APP_ROOT}/revisions/${APP_REVISION}:/var/www
+      - ${APP_ROOT}:/var/www
     networks:
       - crater
 
@@ -92,5 +76,3 @@ volumes:
 networks:
   crater:
     driver: bridge
-  proxy:
-    external: true
