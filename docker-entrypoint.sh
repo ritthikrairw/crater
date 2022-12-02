@@ -35,7 +35,6 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
 
     php artisan key:generate
     php artisan storage:link || true
-    php artisan migrate
     php artisan cache:clear
     php artisan config:clear
     php artisan route:clear
