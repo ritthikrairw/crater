@@ -25,19 +25,23 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
         group="$gid"
     fi
 
+    # chmod
     chown -R "$user:$group" ./
     chmod -R 755 ./
-    chmod -R 777 ./storage
+    chmod -R 777 ./storage bootstrap/cache
 
-    composer install --no-interaction --prefer-dist --optimize-autoloader --no-dev
-    php artisan storage:link || true
+    # composer install
+    composer install -q --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
+
     php artisan key:generate
+    php artisan storage:link || true
     php artisan migrate
     php artisan cache:clear
     php artisan config:clear
     php artisan route:clear
     php artisan view:clear
     php artisan optimize --force
+
 fi
 
 exec "$@"
