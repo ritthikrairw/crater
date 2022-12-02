@@ -2,11 +2,11 @@ version: '3.8'
 services:
 
   app:
-    image: ritthikrairw/crater:1.2
+    image: ghcr.io/ritthikrairw/crater:development
     container_name: ${APP_NAME:?crater}-php
     restart: unless-stopped
     volumes:
-      - ${APP_ROOT}:/var/www
+      - crater_app_data:/var/www
       - ${APP_ROOT}/config/.env:/var/www/.env
       - ${APP_ROOT}/shared/storage:/var/www/storage
       - ${APP_ROOT}/docker-compose/php/uploads.ini:/usr/local/etc/php/conf.d/uploads.ini:rw,delegated
@@ -18,9 +18,9 @@ services:
     container_name: ${APP_NAME:?crater}-nginx
     restart: always
     ports:
-      - 8080:80
+      - 8082:80
     volumes:
-      - ${APP_ROOT}:/var/www
+      - crater_app_data:/var/www
       - ${APP_ROOT}/config/.env:/var/www/.env
       - ${APP_ROOT}/shared/storage:/var/www/storage
       - ${APP_ROOT}/docker-compose/nginx:/etc/nginx/conf.d
@@ -49,7 +49,7 @@ services:
     container_name: ${APP_NAME:?crater}-phpmyadmin
     restart: unless-stopped
     ports:
-      - 8082:80
+      - 8083:80
     environment:
       - PMA_ARBITRARY=1
       - PMA_HOST=db
@@ -65,11 +65,13 @@ services:
     container_name: ${APP_NAME:?crater}-cron
     restart: unless-stopped
     volumes:
-      - ${APP_ROOT}:/var/www
+      - crater_app_data:/var/www
     networks:
       - crater
 
 volumes:
+  crater_app_data:
+    name: ${APP_NAME:?crater}-app-data
   mariadb_data:
     name: ${APP_NAME:?crater}-mariadb
 

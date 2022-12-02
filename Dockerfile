@@ -44,11 +44,13 @@ RUN useradd -G www-data,root -u $uid -d /home/$user $user
 RUN mkdir -p /home/$user/.composer && \
     chown -R $user:$user /home/$user
 
-USER $user
-
 COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
+    && ln -s /usr/local/bin/docker-entrypoint.sh /
 
 COPY . /var/www
+
+USER $user
 
 ENTRYPOINT ["docker-entrypoint.sh"]
 
