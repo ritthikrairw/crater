@@ -39,7 +39,6 @@ if [[ "$1" == apache2* ]] || [ "$1" = 'php-fpm' ]; then
     php artisan config:clear
     php artisan route:clear
     php artisan view:clear
-    php artisan optimize --force
 
 fi
 
