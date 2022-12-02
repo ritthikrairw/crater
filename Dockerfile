@@ -50,8 +50,6 @@ RUN chmod 777 /usr/local/bin/docker-entrypoint.sh \
 
 COPY . /var/www
 
-USER $user
-
 ENTRYPOINT ["docker-entrypoint.sh"]
 
 CMD ["php-fpm"]
